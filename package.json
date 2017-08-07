@@ -1,0 +1,75 @@
+{
+  "name": "@fresh8/nestjs-grpc-transport",
+  "version": "1.0.0",
+  "description": "GRPC transport layer for the NestJS framework",
+  "main": "index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "coverage": "nyc npm test && nyc report --reporter=lcov",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "build": "tsc -p tsconfig.json",
+    "client": "node dist/client.js",
+    "dev": "tsc -p tsconfig.json -w & nodemon dist/grpc-server.js",
+    "server": "node dist/index.js",
+    "style": "prettier \"+(src|test)/**/*.ts\" --write --single-quote --no-semi",
+    "precommit": "lint-staged",
+    "prepublish": "npm run build",
+    "test": "mocha --compilers ts:ts-node/register ./test --recursive --require source-map-support/register",
+    "test-watch": "mocha --compilers ts:ts-node/register ./test --recursive --watch"
+  },
+  "lint-staged": {
+    "+(src|test)/**/*.ts": [
+      "prettier --write --single-quote --no-semi",
+      "git add"
+    ]
+  },
+  "engines": {
+    "node": ">=6.9.0"
+  },
+  "nyc": {
+    "watermarks": {
+      "lines": [80, 95],
+      "functions": [80, 95],
+      "branches": [80, 95],
+      "statements": [80, 95]
+    },
+    "extension": [".ts"],
+    "exclude": ["**/*.d.ts"],
+    "require": ["ts-node/register"]
+  },
+  "author": "Toby Coleman",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fresh8/nestjs-grpc-transport.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fresh8/nestjs-grpc-transport/issues"
+  },
+  "homepage": "https://github.com/fresh8/nestjs-grpc-transport#readme",
+  "devDependencies": {
+    "@types/chai": "^4.0.2",
+    "@types/mocha": "^2.2.41",
+    "chai": "^4.1.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.3",
+    "mocha": "^3.5.0",
+    "nodemon": "^1.11.0",
+    "nyc": "^11.1.0",
+    "prettier": "^1.5.3",
+    "source-map-support": "^0.4.15",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2"
+  },
+  "dependencies": {
+    "@nestjs/common": "^3.0.0",
+    "@nestjs/core": "^3.0.1",
+    "@nestjs/microservices": "^3.0.1",
+    "@nestjs/testing": "^3.0.0",
+    "@nestjs/websockets": "^3.0.0",
+    "grpc": "^1.4.1",
+    "reflect-metadata": "^0.1.10",
+    "rxjs": "^5.4.2",
+    "rxjs-grpc": "^0.1.3"
+  }
+}

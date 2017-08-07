@@ -1,0 +1,30 @@
+{
+  "name": "grpc-example",
+  "version": "1.0.0",
+  "description": "Example usage of the @fresh8/nestjs-grpc-transport pacakge",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsc -p tsconfig.json -w & nodemon dist/grpc-server.js",
+    "build": "tsc -p tsconfig.json",
+    "client": "node dist/example/src/client.js",
+    "server": "node dist/example/src/basic-app.js",
+    "interfaces": "rxjs-grpc -o grpc-namespaces.ts ./src/*.proto"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "typescript": "^2.4.2"
+  },
+  "dependencies": {
+    "@nestjs/common": "^3.0.0",
+    "@nestjs/core": "^3.0.1",
+    "@nestjs/microservices": "^3.0.1",
+    "@nestjs/testing": "^3.0.0",
+    "@nestjs/websockets": "^3.0.0",
+    "grpc": "^1.4.1",
+    "reflect-metadata": "^0.1.10",
+    "rxjs": "^5.4.2",
+    "rxjs-grpc": "^0.1.3"
+  }
+}

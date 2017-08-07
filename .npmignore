@@ -1,0 +1,6 @@
+tsconfig.json
+src
+coverage
+example
+.nyc_output
+npm-debug.log
