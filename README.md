@@ -53,7 +53,7 @@ export default class TestController {
   
   /**
    * Some dummy async method. This might be a call to a database in
-   * some server in a proper application.
+   * a proper application.
    */
   someAsyncThing() {
     return Promise.resolve(`:)`)
