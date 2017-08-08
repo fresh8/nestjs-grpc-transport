@@ -66,7 +66,7 @@ export default class TestController {
 
 ```
 
-Create your GRPC server and provide it to your Nest application.
+Create your [GRPC](https://grpc.io) server and provide it to your [NestJS](https://github.com/kamilmysliwiec/nest) application.
 
 ```typescript
 import { Module } from '@nestjs/common'
