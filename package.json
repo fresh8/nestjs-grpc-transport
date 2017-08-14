@@ -1,6 +1,6 @@
 {
   "name": "@fresh8/nestjs-grpc-transport",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GRPC transport layer for the NestJS framework",
   "main": "index.js",
   "types": "dist/index.d.ts",
@@ -28,32 +28,14 @@
   },
   "nyc": {
     "watermarks": {
-      "lines": [
-        80,
-        95
-      ],
-      "functions": [
-        80,
-        95
-      ],
-      "branches": [
-        80,
-        95
-      ],
-      "statements": [
-        80,
-        95
-      ]
+      "lines": [80, 95],
+      "functions": [80, 95],
+      "branches": [80, 95],
+      "statements": [80, 95]
     },
-    "extension": [
-      ".ts"
-    ],
-    "exclude": [
-      "**/*.d.ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ]
+    "extension": [".ts"],
+    "exclude": ["**/*.d.ts"],
+    "require": ["ts-node/register"]
   },
   "author": "Toby Coleman",
   "license": "MIT",
