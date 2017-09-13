@@ -1,16 +1,8 @@
 {
+  "extends": "./tsconfig-base.json",
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
-    "declaration": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "preserveConstEnums": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "target": "es2015",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "outDir": "./dist"
-  },
-  "include": ["src/**/*"]
+    "baseUrl": "."
+  }
 }

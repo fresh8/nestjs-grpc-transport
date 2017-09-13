@@ -7,7 +7,7 @@
   "scripts": {
     "coverage": "nyc npm test && nyc report --reporter=lcov",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig-build.json",
     "client": "node dist/client.js",
     "dev": "tsc -p tsconfig.json -w & nodemon dist/grpc-server.js",
     "server": "node dist/index.js",
@@ -24,36 +24,19 @@
     ]
   },
   "engines": {
-    "node": ">=6.9.0"
+    "node": ">=6.9.0",
+    "npm": ">=5"
   },
   "nyc": {
     "watermarks": {
-      "lines": [
-        80,
-        95
-      ],
-      "functions": [
-        80,
-        95
-      ],
-      "branches": [
-        80,
-        95
-      ],
-      "statements": [
-        80,
-        95
-      ]
+      "lines": [80, 95],
+      "functions": [80, 95],
+      "branches": [80, 95],
+      "statements": [80, 95]
     },
-    "extension": [
-      ".ts"
-    ],
-    "exclude": [
-      "**/*.d.ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ]
+    "extension": [".ts"],
+    "exclude": ["**/*.d.ts"],
+    "require": ["ts-node/register"]
   },
   "author": "Toby Coleman",
   "license": "MIT",
@@ -68,6 +51,7 @@
   "devDependencies": {
     "@types/chai": "^4.0.2",
     "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.28",
     "chai": "^4.1.1",
     "coveralls": "^2.13.1",
     "husky": "^0.14.3",
@@ -81,11 +65,11 @@
     "typescript": "^2.4.2"
   },
   "dependencies": {
-    "@nestjs/common": "^3.0.0",
-    "@nestjs/core": "^3.0.1",
-    "@nestjs/microservices": "^3.0.1",
-    "@nestjs/testing": "^3.0.0",
-    "@nestjs/websockets": "^3.0.0",
+    "@nestjs/common": "3.0.1",
+    "@nestjs/core": "3.0.1",
+    "@nestjs/microservices": "3.0.1",
+    "@nestjs/testing": "3.0.0",
+    "@nestjs/websockets": "3.0.0",
     "grpc": "^1.4.1",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.4.2",
