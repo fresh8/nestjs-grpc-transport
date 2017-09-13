@@ -10,6 +10,7 @@
 - Typescript 2.x
 - Node boron
 - Npm 5.x
+- NestJS v3.0.1 (there is breaking change in v3.1.1).
 
 ## Installation
 ```npm install @fresh8/nestjs-grpc-transport --save```
