@@ -6,6 +6,11 @@
 
 [GRPC](https://grpc.io) transport layer for the [NestJS](https://github.com/kamilmysliwiec/nest) framework.
 
+## Requirements
+- Typescript 2.x
+- Node boron
+- Npm 5.x
+
 ## Installation
 ```npm install @fresh8/nestjs-grpc-transport --save```
 
