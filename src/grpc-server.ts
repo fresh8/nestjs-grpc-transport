@@ -5,7 +5,7 @@ import rpc from './rpc-decorator'
 import { unknownRpcFunction } from './warnings'
 import isServerBuilder from './is-server-builder'
 
-export interface createServerOptions extends GRPCServerConfig {
+export interface CreateServerOptions extends GRPCServerConfig {
   /** Absolute path to the your .proto file. */
   protoPath: string
   /** The package specifier used in your .proto file. */
@@ -106,7 +106,7 @@ export class GRPCServer<T = any> extends Server
 /**
  * creates a GRPC server.
  */
-function createGRPCServer<T>(config: createServerOptions): GRPCServer<T>
+function createGRPCServer<T>(config: CreateServerOptions): GRPCServer<T>
 /**
  * creates a GRPC server.
  */
