@@ -2,8 +2,8 @@
   "name": "@fresh8/nestjs-grpc-transport",
   "version": "1.1.1",
   "description": "GRPC transport layer for the NestJS framework",
-  "main": "index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "coverage": "nyc npm test && nyc report --reporter=lcov",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
