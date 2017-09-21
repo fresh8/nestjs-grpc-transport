@@ -105,15 +105,15 @@ describe('GRPCServer', () => {
       callback()
     }
 
-    const app = NestFactory.createMicroservice(ApplicationModule, {
+    NestFactory.createMicroservice(ApplicationModule, {
       strategy: grpcServer
-    })
-
-    app.listen(() => {
-      const handlers = grpcServer.getGRPCHandlers()
-      expect(handlers.sayHello).to.be.a('function')
-      expect(handlers.sayGoodBye).to.be.a('function')
-      done()
+    }).then(app => {
+      app.listen(() => {
+        const handlers = grpcServer.getGRPCHandlers()
+        expect(handlers.sayHello).to.be.a('function')
+        expect(handlers.sayGoodBye).to.be.a('function')
+        done()
+      })
     })
   })
 })
