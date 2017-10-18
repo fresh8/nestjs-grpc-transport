@@ -9,13 +9,16 @@
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "build": "tsc -p tsconfig-build.json",
     "client": "node dist/client.js",
-    "dev": "tsc -p tsconfig.json -w & nodemon dist/grpc-server.js",
+    "dev": "tsc -p tsconfig.json -w",
     "server": "node dist/index.js",
-    "style": "prettier \"+(src|test)/**/*.ts\" --write --single-quote --no-semi",
+    "style":
+      "prettier \"+(src|test)/**/*.ts\" --write --single-quote --no-semi",
     "precommit": "lint-staged",
     "prepublish": "npm run build",
-    "test": "mocha --compilers ts:ts-node/register ./test --recursive --require source-map-support/register",
-    "test-watch": "mocha --compilers ts:ts-node/register ./test --recursive --watch"
+    "test":
+      "mocha --compilers ts:ts-node/register ./test --recursive --require source-map-support/register",
+    "test-watch":
+      "mocha --compilers ts:ts-node/register ./test --recursive --watch"
   },
   "lint-staged": {
     "+(src|test)/**/*.ts": [
@@ -29,32 +32,14 @@
   },
   "nyc": {
     "watermarks": {
-      "lines": [
-        80,
-        95
-      ],
-      "functions": [
-        80,
-        95
-      ],
-      "branches": [
-        80,
-        95
-      ],
-      "statements": [
-        80,
-        95
-      ]
+      "lines": [80, 95],
+      "functions": [80, 95],
+      "branches": [80, 95],
+      "statements": [80, 95]
     },
-    "extension": [
-      ".ts"
-    ],
-    "exclude": [
-      "**/*.d.ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ]
+    "extension": [".ts"],
+    "exclude": ["**/*.d.ts"],
+    "require": ["ts-node/register"]
   },
   "author": "Toby Coleman",
   "license": "MIT",

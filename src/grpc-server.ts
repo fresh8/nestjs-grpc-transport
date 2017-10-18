@@ -32,19 +32,18 @@ export interface GRPCServerConfig {
  * 
  * NestFactory.createMicroservice(appModule, {
  *  strategy: new GRPCServer(
- *    new ServerBuilder<nsp.ServerBuilder>('path/to/myproto.proto', 'nsp'),
+ *    new ServerBuilder('path/to/myproto.proto', 'nsp'),
  *    { host: 'localhost', port: 50051, serviceName: 'MyService' }
  *  )
  * })
  */
-export class GRPCServer<T = any> extends Server
-  implements CustomTransportStrategy {
+export class GRPCServer extends Server implements CustomTransportStrategy {
   private readonly server: any
   private readonly host: string
   private readonly port: number
   private readonly serviceName: string
 
-  constructor(server: T, { host, port, serviceName }: GRPCServerConfig) {
+  constructor(server: any, { host, port, serviceName }: GRPCServerConfig) {
     super()
     this.server = server
     this.host = host
@@ -72,13 +71,10 @@ export class GRPCServer<T = any> extends Server
    * Register RPC handlers
    */
   private init(): void {
-    this.server[`add${this.serviceName}`](this.getGRPCHandlers())
+    const r = this.getGRPCHandlers()
+    this.server[`add${this.serviceName}`](r)
   }
 
-  /**
-   * Returns any methods decorated with @MessagePattern({ rpc: 'rpcMethod' })
-   * or @rpc.
-   */
   private getGRPCHandlers() {
     const handles = this.getHandlers()
     const rpcHandles: { [index: string]: Function } = {}
@@ -94,7 +90,8 @@ export class GRPCServer<T = any> extends Server
         if (!pattern.rpc) {
           this.logger.warn(unknownRpcFunction(handles[serializedPattern]))
         } else {
-          rpcHandles[pattern.rpc] = handles[serializedPattern]
+          rpcHandles[pattern.rpc] = (data: any) =>
+            this.transformToObservable(handles[serializedPattern](data))
         }
       }
     })
@@ -106,18 +103,15 @@ export class GRPCServer<T = any> extends Server
 /**
  * creates a GRPC server.
  */
-function createGRPCServer<T>(config: CreateServerOptions): GRPCServer<T>
+function createGRPCServer(config: CreateServerOptions): GRPCServer
 /**
  * creates a GRPC server.
  */
-function createGRPCServer<T>(
-  server: T,
+function createGRPCServer(
+  server: any,
   { host, port, serviceName }: GRPCServerConfig
-): GRPCServer<T>
-function createGRPCServer<T = any>(
-  serverOrConfig: any,
-  startConfig?: any
-): GRPCServer<T> {
+): GRPCServer
+function createGRPCServer(serverOrConfig: any, startConfig?: any): GRPCServer {
   if (isServerBuilder(serverOrConfig)) {
     return new GRPCServer(serverOrConfig, startConfig)
   }
