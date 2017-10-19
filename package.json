@@ -1,6 +1,6 @@
 {
   "name": "@fresh8/nestjs-grpc-transport",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "GRPC transport layer for the NestJS framework",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,14 +11,11 @@
     "client": "node dist/client.js",
     "dev": "tsc -p tsconfig.json -w",
     "server": "node dist/index.js",
-    "style":
-      "prettier \"+(src|test)/**/*.ts\" --write --single-quote --no-semi",
+    "style": "prettier \"+(src|test)/**/*.ts\" --write --single-quote --no-semi",
     "precommit": "lint-staged",
     "prepublish": "npm run build",
-    "test":
-      "mocha --compilers ts:ts-node/register ./test --recursive --require source-map-support/register",
-    "test-watch":
-      "mocha --compilers ts:ts-node/register ./test --recursive --watch"
+    "test": "mocha --compilers ts:ts-node/register ./test --recursive --require source-map-support/register",
+    "test-watch": "mocha --compilers ts:ts-node/register ./test --recursive --watch"
   },
   "lint-staged": {
     "+(src|test)/**/*.ts": [
@@ -32,14 +29,32 @@
   },
   "nyc": {
     "watermarks": {
-      "lines": [80, 95],
-      "functions": [80, 95],
-      "branches": [80, 95],
-      "statements": [80, 95]
+      "lines": [
+        80,
+        95
+      ],
+      "functions": [
+        80,
+        95
+      ],
+      "branches": [
+        80,
+        95
+      ],
+      "statements": [
+        80,
+        95
+      ]
     },
-    "extension": [".ts"],
-    "exclude": ["**/*.d.ts"],
-    "require": ["ts-node/register"]
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
   },
   "author": "Toby Coleman",
   "license": "MIT",
