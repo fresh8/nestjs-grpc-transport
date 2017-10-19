@@ -142,7 +142,6 @@ function createGRPCServer(
   { host, port, serviceName }: GRPCServerConfig
 ): GRPCServer
 function createGRPCServer(serverOrConfig: any, startConfig?: any): GRPCServer {
-  console.log('here!')
   if (isServerBuilder(serverOrConfig)) {
     return new GRPCServer(serverOrConfig, startConfig)
   }
