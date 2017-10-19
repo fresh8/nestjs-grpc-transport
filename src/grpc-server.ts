@@ -1,5 +1,6 @@
 import { Server, CustomTransportStrategy } from '@nestjs/microservices'
 import { serverBuilder } from 'rxjs-grpc'
+import { Observable } from 'rxjs'
 
 import rpc from './rpc-decorator'
 import { unknownRpcFunction } from './warnings'
@@ -71,32 +72,61 @@ export class GRPCServer extends Server implements CustomTransportStrategy {
    * Register RPC handlers
    */
   private init(): void {
-    const r = this.getGRPCHandlers()
-    this.server[`add${this.serviceName}`](r)
+    const delegates: any = this.getGRPCDelegates()
+      .map(d => {
+        return {
+          ...d,
+          rpc: this.wrapRpc(d.rpc)
+        }
+      })
+      .reduce((acc: { [index: string]: Function }, val: any) => {
+        acc[val.name] = val.rpc
+        return acc
+      }, {})
+
+    this.server[`add${this.serviceName}`](delegates)
   }
 
-  private getGRPCHandlers() {
+  /**
+   * Makes the output of some async method observable. This
+   * is required by rxjs-grpc.
+   * @param delegate the rpc handler to handle a request.
+   */
+  private wrapRpc(delegate: (...args: Array<any>) => Promise<any>) {
+    return (...args: Array<any>) => {
+      const response$ = this.transformToObservable(
+        delegate(...args)
+      ) as Observable<any>
+
+      return response$
+    }
+  }
+
+  /**
+   * Returns any methods decorated with @MessagePattern({ rpc: 'rpcMethod' })
+   * or @rpc.
+   */
+  private getGRPCDelegates() {
     const handles = this.getHandlers()
-    const rpcHandles: { [index: string]: Function } = {}
+    const ret: Array<{ rpc: any; name: string }> = []
 
     Object.keys(handles).forEach(serializedPattern => {
-      // Patterns are undefined for methods decorated with
-      // @MessagePattern() with no arguments
       if (serializedPattern !== 'undefined') {
-        const pattern = JSON.parse(serializedPattern)
+        let pattern: { rpc?: string }
 
-        // guard against the user forgetting to name the rpc method
-        // when using @MessagePattern({ rpc })
-        if (!pattern.rpc) {
-          this.logger.warn(unknownRpcFunction(handles[serializedPattern]))
-        } else {
-          rpcHandles[pattern.rpc] = (data: any) =>
-            this.transformToObservable(handles[serializedPattern](data))
+        try {
+          pattern = JSON.parse(serializedPattern)
+        } catch (error) {
+          return
+        }
+
+        if (pattern.rpc) {
+          ret.push({ rpc: handles[serializedPattern], name: pattern.rpc })
         }
       }
     })
 
-    return rpcHandles
+    return ret
   }
 }
 
@@ -112,6 +142,7 @@ function createGRPCServer(
   { host, port, serviceName }: GRPCServerConfig
 ): GRPCServer
 function createGRPCServer(serverOrConfig: any, startConfig?: any): GRPCServer {
+  console.log('here!')
   if (isServerBuilder(serverOrConfig)) {
     return new GRPCServer(serverOrConfig, startConfig)
   }
