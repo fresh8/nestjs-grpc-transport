@@ -18,25 +18,16 @@ describe('@rpc', () => {
       return { message: `Hello, ${request.name} ${res}` }
     }
 
-    somethingAsynchronous(name?: string) {
-      return Promise.resolve(`:)`)
+    async somethingAsynchronous(name?: string) {
+      return ':)'
     }
   }
 
-  it('should make an asynchronous method observable', done => {
+  it('should not mutate a method', async () => {
     const controller: any = new TestController()
+    const res = await controller.sayHello({ name: 'Tyrion' })
 
-    controller.sayHello({ name: 'Tyrion' }).subscribe(
-      (x: string) => {
-        expect(x).to.deep.equal({ message: 'Hello, Tyrion :)' })
-      },
-      (err: any) => {
-        throw err
-      },
-      () => {
-        done()
-      }
-    )
+    expect(res).to.deep.equal({ message: 'Hello, Tyrion :)' })
   })
 
   it('should define metadata, needed by nest', () => {
