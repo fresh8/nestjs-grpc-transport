@@ -1,5 +1,6 @@
 import { Server, CustomTransportStrategy } from '@nestjs/microservices'
 import { serverBuilder } from 'rxjs-grpc'
+import { Observable } from 'rxjs'
 
 import rpc from './rpc-decorator'
 import { unknownRpcFunction } from './warnings'
@@ -32,19 +33,18 @@ export interface GRPCServerConfig {
  * 
  * NestFactory.createMicroservice(appModule, {
  *  strategy: new GRPCServer(
- *    new ServerBuilder<nsp.ServerBuilder>('path/to/myproto.proto', 'nsp'),
+ *    new ServerBuilder('path/to/myproto.proto', 'nsp'),
  *    { host: 'localhost', port: 50051, serviceName: 'MyService' }
  *  )
  * })
  */
-export class GRPCServer<T = any> extends Server
-  implements CustomTransportStrategy {
+export class GRPCServer extends Server implements CustomTransportStrategy {
   private readonly server: any
   private readonly host: string
   private readonly port: number
   private readonly serviceName: string
 
-  constructor(server: T, { host, port, serviceName }: GRPCServerConfig) {
+  constructor(server: any, { host, port, serviceName }: GRPCServerConfig) {
     super()
     this.server = server
     this.host = host
@@ -72,52 +72,76 @@ export class GRPCServer<T = any> extends Server
    * Register RPC handlers
    */
   private init(): void {
-    this.server[`add${this.serviceName}`](this.getGRPCHandlers())
+    const delegates: any = this.getGRPCDelegates()
+      .map(d => {
+        return {
+          ...d,
+          rpc: this.wrapRpc(d.rpc)
+        }
+      })
+      .reduce((acc: { [index: string]: Function }, val: any) => {
+        acc[val.name] = val.rpc
+        return acc
+      }, {})
+
+    this.server[`add${this.serviceName}`](delegates)
+  }
+
+  /**
+   * Makes the output of some async method observable. This
+   * is required by rxjs-grpc.
+   * @param delegate the rpc handler to handle a request.
+   */
+  private wrapRpc(delegate: (...args: Array<any>) => Promise<any>) {
+    return (...args: Array<any>) => {
+      const response$ = this.transformToObservable(
+        delegate(...args)
+      ) as Observable<any>
+
+      return response$
+    }
   }
 
   /**
    * Returns any methods decorated with @MessagePattern({ rpc: 'rpcMethod' })
    * or @rpc.
    */
-  private getGRPCHandlers() {
+  private getGRPCDelegates() {
     const handles = this.getHandlers()
-    const rpcHandles: { [index: string]: Function } = {}
+    const ret: Array<{ rpc: any; name: string }> = []
 
     Object.keys(handles).forEach(serializedPattern => {
-      // Patterns are undefined for methods decorated with
-      // @MessagePattern() with no arguments
       if (serializedPattern !== 'undefined') {
-        const pattern = JSON.parse(serializedPattern)
+        let pattern: { rpc?: string }
 
-        // guard against the user forgetting to name the rpc method
-        // when using @MessagePattern({ rpc })
-        if (!pattern.rpc) {
-          this.logger.warn(unknownRpcFunction(handles[serializedPattern]))
-        } else {
-          rpcHandles[pattern.rpc] = handles[serializedPattern]
+        try {
+          pattern = JSON.parse(serializedPattern)
+        } catch (error) {
+          return
+        }
+
+        if (pattern.rpc) {
+          ret.push({ rpc: handles[serializedPattern], name: pattern.rpc })
         }
       }
     })
 
-    return rpcHandles
+    return ret
   }
 }
 
 /**
  * creates a GRPC server.
  */
-function createGRPCServer<T>(config: CreateServerOptions): GRPCServer<T>
+function createGRPCServer(config: CreateServerOptions): GRPCServer
 /**
  * creates a GRPC server.
  */
-function createGRPCServer<T>(
-  server: T,
+function createGRPCServer(
+  server: any,
   { host, port, serviceName }: GRPCServerConfig
-): GRPCServer<T>
-function createGRPCServer<T = any>(
-  serverOrConfig: any,
-  startConfig?: any
-): GRPCServer<T> {
+): GRPCServer
+function createGRPCServer(serverOrConfig: any, startConfig?: any): GRPCServer {
   if (isServerBuilder(serverOrConfig)) {
     return new GRPCServer(serverOrConfig, startConfig)
   }

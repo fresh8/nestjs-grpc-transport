@@ -109,9 +109,11 @@ describe('GRPCServer', () => {
       strategy: grpcServer
     }).then(app => {
       app.listen(() => {
-        const handlers = grpcServer.getGRPCHandlers()
-        expect(handlers.sayHello).to.be.a('function')
-        expect(handlers.sayGoodBye).to.be.a('function')
+        const delegates = grpcServer.getGRPCDelegates()
+        expect(delegates.some((d: any) => d.name === 'sayHello')).to.equal(true)
+        expect(delegates.some((d: any) => d.name === 'sayGoodBye')).to.equal(
+          true
+        )
         done()
       })
     })
