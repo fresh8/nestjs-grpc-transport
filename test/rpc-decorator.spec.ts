@@ -24,14 +24,20 @@ describe('@rpc', () => {
   }
 
   it('should not mutate a method', async () => {
-    const controller: any = new TestController()
+    const controller = new TestController()
     const res = await controller.sayHello({ name: 'Tyrion' })
 
     expect(res).to.deep.equal({ message: 'Hello, Tyrion :)' })
   })
 
+  it('should retain the original function name', () => {
+    const controller = new TestController()
+
+    expect(controller.sayHello.name).to.equal('sayHello')
+  })
+
   it('should define metadata, needed by nest', () => {
-    const controller: any = new TestController()
+    const controller = new TestController()
 
     expect(
       Reflect.getMetadata(PATTERN_METADATA, controller.sayHello)
