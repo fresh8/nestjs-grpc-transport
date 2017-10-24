@@ -21,6 +21,11 @@ export default (
     return original.bind(this)(...args)
   }
 
+  Object.defineProperty(descriptor.value, 'name', {
+    value: original.name,
+    writable: false
+  })
+
   Reflect.defineMetadata(
     PATTERN_METADATA,
     { rpc: propertyKey },
