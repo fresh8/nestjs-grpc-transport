@@ -11,14 +11,11 @@
     "client": "node dist/client.js",
     "dev": "tsc -p tsconfig.json -w",
     "server": "node dist/index.js",
-    "style":
-      "prettier \"+(src|test)/**/*.ts\" --write --single-quote --no-semi",
+    "style": "prettier \"+(src|test)/**/*.ts\" --write --single-quote --no-semi",
     "precommit": "lint-staged",
     "prepublish": "npm run build",
-    "test":
-      "mocha --compilers ts:ts-node/register ./test --recursive --require source-map-support/register",
-    "test-watch":
-      "mocha --compilers ts:ts-node/register ./test --recursive --watch"
+    "test": "mocha --compilers ts:ts-node/register ./test --recursive --require source-map-support/register",
+    "test-watch": "mocha --compilers ts:ts-node/register ./test --recursive --watch"
   },
   "lint-staged": {
     "+(src|test)/**/*.ts": [
@@ -32,15 +29,37 @@
   },
   "nyc": {
     "watermarks": {
-      "lines": [80, 95],
-      "functions": [80, 95],
-      "branches": [80, 95],
-      "statements": [80, 95]
+      "lines": [
+        80,
+        95
+      ],
+      "functions": [
+        80,
+        95
+      ],
+      "branches": [
+        80,
+        95
+      ],
+      "statements": [
+        80,
+        95
+      ]
     },
-    "extension": [".ts"],
-    "exclude": ["**/*.d.ts"],
-    "require": ["ts-node/register"],
-    "reporter": ["html","text-summary","json"]
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "html",
+      "text-summary",
+      "json"
+    ]
   },
   "author": "Toby Coleman",
   "license": "MIT",
@@ -77,6 +96,6 @@
     "grpc": "^1.4.1",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.4.3",
-    "rxjs-grpc": "^0.1.3"
+    "rxjs-grpc": "^0.1.5"
   }
 }
