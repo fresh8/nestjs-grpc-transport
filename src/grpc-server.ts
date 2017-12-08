@@ -99,7 +99,7 @@ export class GRPCServer extends Server implements CustomTransportStrategy {
         delegate(...args)
       ) as Observable<any>
 
-      //TODO this whole block is to work around https://github.com/nestjs/nest/issues/290. Although transforming of the error into the format `rxjs-grpc` expect might need to stay here.
+      //TODO this whole block is to work around https://github.com/nestjs/nest/issues/290. Although transforming of the error into the format `rxjs-grpc` expect might need to stay here (or move to the error subscription).
       const workedAround = Observable.create((observer: Observer<any>) => {
         response$.subscribe({
           next(value: any) {
