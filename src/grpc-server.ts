@@ -1,6 +1,7 @@
 import { Server, CustomTransportStrategy } from '@nestjs/microservices'
 import { serverBuilder } from 'rxjs-grpc'
 import { Observable, Observer } from 'rxjs/'
+import { status as GRPCStatus } from 'grpc'
 
 import rpc from './rpc-decorator'
 import { unknownRpcFunction } from './warnings'
@@ -98,12 +99,16 @@ export class GRPCServer extends Server implements CustomTransportStrategy {
         delegate(...args)
       ) as Observable<any>
 
-      //TODO this whole block is to work around https://github.com/nestjs/nest/issues/290
+      //TODO this whole block is to work around https://github.com/nestjs/nest/issues/290. Although transforming of the error into the format `rxjs-grpc` expect might need to stay here.
       const workedAround = Observable.create((observer: Observer<any>) => {
         response$.subscribe({
           next(value: any) {
             if (value && value.error && value instanceof Observable) {
-              return observer.error((value as any).error)
+              return observer.error({
+                ...(value as any).error,
+                code: GRPCStatus.INTERNAL
+                //TODO support metadata (for `value.status`, and potential future other properties) once https://github.com/kondi/rxjs-grpc/issues/11 is resolved.
+              })
             }
             observer.next(value)
           },
