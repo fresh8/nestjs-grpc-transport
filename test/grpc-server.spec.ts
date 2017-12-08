@@ -110,6 +110,8 @@ describe('GRPCServer', () => {
     }).then(app => {
       app.listen(() => {
         const delegates = grpcServer.getGRPCDelegates()
+        grpcServer.close()
+        app.close()
         expect(delegates.some((d: any) => d.name === 'sayHello')).to.equal(true)
         expect(delegates.some((d: any) => d.name === 'sayGoodBye')).to.equal(
           true
