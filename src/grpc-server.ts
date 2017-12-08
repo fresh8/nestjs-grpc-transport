@@ -1,6 +1,6 @@
 import { Server, CustomTransportStrategy } from '@nestjs/microservices'
 import { serverBuilder } from 'rxjs-grpc'
-import { Observable, Observer } from 'rxjs'
+import { Observable, Observer } from 'rxjs/'
 
 import rpc from './rpc-decorator'
 import { unknownRpcFunction } from './warnings'
@@ -102,15 +102,8 @@ export class GRPCServer extends Server implements CustomTransportStrategy {
       const workedAround = Observable.create((observer: Observer<any>) => {
         response$.subscribe({
           next(value: any) {
-            if (typeof value == 'object') {
-              const properties = Object.keys(value)
-              const isErrorInDisguise =
-                properties.length == 2 &&
-                value.hasOwnProperty('code') &&
-                value.hasOwnProperty('message')
-              if (isErrorInDisguise) {
-                return observer.error(value)
-              }
+            if (value && value.error && value instanceof Observable) {
+              return observer.error((value as any).error)
             }
             observer.next(value)
           },
