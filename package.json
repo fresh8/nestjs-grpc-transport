@@ -39,7 +39,8 @@
     },
     "extension": [".ts"],
     "exclude": ["**/*.d.ts"],
-    "require": ["ts-node/register"]
+    "require": ["ts-node/register"],
+    "reporter": ["html","text-summary","json"]
   },
   "author": "Toby Coleman",
   "license": "MIT",
