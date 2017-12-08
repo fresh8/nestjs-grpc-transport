@@ -3,6 +3,7 @@ import { MessagePattern } from '@nestjs/microservices'
 import { Module } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { serverBuilder } from 'rxjs-grpc'
+import { status as GRPCStatus } from 'grpc'
 import { Observable } from 'rxjs'
 
 import rpc from '../src/rpc-decorator'
@@ -98,11 +99,40 @@ describe('GRPCServer', () => {
       serviceName: 'Greeter'
     })
 
-    it('Transforms responses into observable', () => {
+    it('Transforms responses into observable', done => {
       const wrapped = server.wrapRpc(() => {
         return false
       })
-      expect(wrapped()).to.be.an.instanceof(Observable)
+      const result = wrapped()
+      expect(result).to.be.an.instanceof(Observable)
+      result.subscribe({
+        next(value: any) {
+          expect(value).to.equal(false)
+          done()
+        }
+      })
+    })
+
+    it('Can unwrap observables 1 level if required', done => {
+      //TODO remove/adapt that test once https://github.com/nestjs/nest/issues/290 is resolved.
+      const wrapped = server.wrapRpc(() => {
+        return Promise.resolve(
+          Observable.throw({
+            status: 4,
+            message: 'this is an error in disguise'
+          })
+        )
+      })
+      wrapped().subscribe({
+        complete() {
+          done('Should not have succeeded')
+        },
+        error(e: any) {
+          expect(e.code).to.equal(GRPCStatus.INTERNAL)
+          expect(e.message).to.equal('this is an error in disguise')
+          done()
+        }
+      })
     })
   })
 
