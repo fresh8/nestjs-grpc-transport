@@ -3,6 +3,7 @@ import { MessagePattern } from '@nestjs/microservices'
 import { Module } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { serverBuilder } from 'rxjs-grpc'
+import { Observable } from 'rxjs'
 
 import rpc from '../src/rpc-decorator'
 import createServer from '../src/grpc-server'
@@ -86,6 +87,23 @@ describe('GRPCServer', () => {
     server.listen()
     server.close()
     expect(builder.running).to.equal(false)
+  })
+
+  describe('wraprpc', () => {
+    const builder = makeMockServer('Greeter')
+
+    const server: any = createServer(builder, {
+      host: '0.0.0.0',
+      port: 50052,
+      serviceName: 'Greeter'
+    })
+
+    it('Transforms responses into observable', () => {
+      const wrapped = server.wrapRpc(() => {
+        return false
+      })
+      expect(wrapped()).to.be.an.instanceof(Observable)
+    })
   })
 
   it('should add rpc handlers to a GRPC server', done => {
