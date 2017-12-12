@@ -3,7 +3,6 @@ import { MessagePattern } from '@nestjs/microservices'
 import { Module } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { serverBuilder } from 'rxjs-grpc'
-import { status as GRPCStatus } from 'grpc'
 import { Observable } from 'rxjs'
 
 import rpc from '../src/rpc-decorator'
@@ -118,7 +117,6 @@ describe('GRPCServer', () => {
       const wrapped = server.wrapRpc(() => {
         return Promise.resolve(
           Observable.throw({
-            status: 4,
             message: 'this is an error in disguise'
           })
         )
@@ -128,8 +126,22 @@ describe('GRPCServer', () => {
           done('Should not have succeeded')
         },
         error(e: any) {
-          expect(e.code).to.equal(GRPCStatus.INTERNAL)
           expect(e.message).to.equal('this is an error in disguise')
+          done()
+        }
+      })
+    })
+
+    it('supports errors following the expected control flow', done => {
+      const wrapped = server.wrapRpc(() => {
+        return Promise.reject({ message: 'got borked' })
+      })
+      wrapped().subscribe({
+        complete() {
+          done('Should not have succeeded')
+        },
+        error(e: any) {
+          expect(e.message).to.equal('got borked')
           done()
         }
       })
