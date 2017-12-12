@@ -131,6 +131,21 @@ describe('GRPCServer', () => {
         }
       })
     })
+
+    it('supports errors following the expected control flow', done => {
+      const wrapped = server.wrapRpc(() => {
+        return Promise.reject({ message: 'got borked' })
+      })
+      wrapped().subscribe({
+        complete() {
+          done('Should not have succeeded')
+        },
+        error(e: any) {
+          expect(e.message).to.equal('got borked')
+          done()
+        }
+      })
+    })
   })
 
   it('should add rpc handlers to a GRPC server', done => {
