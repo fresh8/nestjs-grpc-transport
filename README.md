@@ -113,3 +113,13 @@ app.listen(() => {
 
 ## Examples
 A simple example project is provided [here](example).
+
+## A note on Exceptions handling
+Nestjs itself catches and handles exceptions as part of its [Exception Filters](https://docs.nestjs.com/microservices/exception-filters) feature. `nestjs-grpc-transport` only transforms it to the format expected by `rxjs-grpc`.
+
+To the best of our understanding this implies:
+ - [Any exception](https://stackoverflow.com/questions/47756819/shared-exceptions-between-http-and-rpc) that is not an instance of `@nestjs/microservices/RpcException` will be reported as `Internal` error (code 13).
+ - To send errors other than `Internal` simply throw a new RpcException with the following property:
+   - `code : number`:  The [exception code](https://godoc.org/google.golang.org/grpc/codes#Code). Defaults to `13`.
+   - `message : string`: An additional message. Defaults to "Internal Server Error"
+ - Exceptions [are not logged](https://github.com/nestjs/nest/issues/303).
