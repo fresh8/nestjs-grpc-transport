@@ -1,7 +1,7 @@
 # Nestjs-grpc-transport (deprecated)
 
 ## THIS PACKAGE IS NO LONGER ACTIVELY MAINTAINED
-For gRPC support, we recommend using the officially supported [gRPC Transport](https://docs.nestjs.com/microservices/grpc) for Nest.
+We recommend using the officially supported [gRPC Transport](https://docs.nestjs.com/microservices/grpc) for Nest.
 
 # This package is 
 
