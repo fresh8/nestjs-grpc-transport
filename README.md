@@ -3,8 +3,6 @@
 ## THIS PACKAGE IS NO LONGER ACTIVELY MAINTAINED
 We recommend using the officially supported [gRPC Transport](https://docs.nestjs.com/microservices/grpc) for Nest.
 
-# This package is 
-
 [![CircleCI](https://circleci.com/gh/fresh8/nestjs-grpc-transport.svg?style=svg)](https://circleci.com/gh/fresh8/nestjs-grpc-transport)
 [![Coverage Status](https://coveralls.io/repos/github/fresh8/nestjs-grpc-transport/badge.svg?branch=master)](https://coveralls.io/github/fresh8/nestjs-grpc-transport?branch=master)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
