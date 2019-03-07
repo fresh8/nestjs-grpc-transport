@@ -96,6 +96,6 @@
     "grpc": "^1.7.2",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.4.3",
-    "rxjs-grpc": "^0.1.5"
+    "rxjs-grpc": "^0.2.0"
   }
 }
