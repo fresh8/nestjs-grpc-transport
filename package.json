@@ -13,9 +13,10 @@
     "server": "node dist/index.js",
     "style": "prettier \"+(src|test)/**/*.ts\" --write --single-quote --no-semi",
     "precommit": "lint-staged",
-    "prepublish": "npm run build",
+    "prepublish": "npm run snyk-protect && npm run build",
     "test": "mocha --compilers ts:ts-node/register ./test --recursive --require source-map-support/register",
-    "test-watch": "mocha --compilers ts:ts-node/register ./test --recursive --watch"
+    "test-watch": "mocha --compilers ts:ts-node/register ./test --recursive --watch",
+    "snyk-protect": "snyk protect"
   },
   "lint-staged": {
     "+(src|test)/**/*.ts": [
@@ -96,6 +97,8 @@
     "grpc": "^1.7.2",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.4.3",
-    "rxjs-grpc": "^0.1.5"
-  }
+    "rxjs-grpc": "^0.1.5",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
